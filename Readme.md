@@ -2,7 +2,7 @@
 
 ## Managing The Keyboard
 
-'''Swift
+```swift
 //In viewdidload(){
 	//.....
 	NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -25,5 +25,4 @@
         tableView.scrollIndicatorInsets = insets
         
     }
-
-'''
+```
