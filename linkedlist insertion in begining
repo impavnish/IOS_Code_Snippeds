@@ -1,5 +1,6 @@
-```swift
 # linkedlist insertion in begining
+
+```swift
 
 enum LinkedList<element: Comparable> {
     case empty
