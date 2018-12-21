@@ -1,0 +1,43 @@
+```swift
+# linkedlist insertion in begining
+
+enum LinkedList<element: Comparable> {
+    case empty
+    indirect case node(value: element, next: LinkedList<element>)
+    
+    mutating func addValue(_ newValue: element) {
+        self = self.addValueU(newValue)
+    }
+    
+    func addValueU(_ newValue: element) ->LinkedList<element>{
+        switch self {
+        case .empty:
+            return .node(value: newValue, next: .empty)
+        case  .node(_, _):
+            return .node(value: newValue, next: self)
+        }
+    }
+}
+
+extension LinkedList: CustomStringConvertible{
+    var description: String {
+        switch self {
+        case .empty:
+            return ""
+        case let .node(value, next):
+            print(value, terminator:" ")
+             let _ = next.description
+            return ""
+        }
+    }
+}
+
+var ll = LinkedList<Int>.empty
+ll.addValue(3)
+ll.addValue(4)
+ll.addValue(5)
+ll.addValue(6)
+ll.addValue(7)
+print(ll)
+
+```
