@@ -1,0 +1,89 @@
+``` swift
+//
+//  ViewController.swift
+//  PageViewControllerDemo
+//
+//  Created by Pavnish Kumar Rana on 05/12/18.
+//  Copyright © 2018 Finoit. All rights reserved.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+    var currentPageIndex = 0
+    var pageViewController: UIPageViewController?
+    @IBOutlet weak var pageController: UIPageControl!
+    let images = ["image1", "image2", "image3", "image4", "image5", "image6", "image7"]
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        pageViewController?.view.frame = view.frame
+        pageViewController?.dataSource = self
+        pageViewController?.delegate = self
+        
+        
+        pageViewController?.setViewControllers([getImageViewController(for: currentPageIndex)], direction: .forward, animated: false, completion: nil)
+        
+        view.addSubview((pageViewController?.view)!)
+        addChildViewController(pageViewController!)
+        
+        pageController.currentPage = currentPageIndex
+        pageController.numberOfPages = images.count
+        
+        view.bringSubview(toFront: pageController)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func getImageViewController(for index: Int) ->ImageViewController {
+        let initialPage = ImageViewController.getObject
+        initialPage.pageIndex = index
+        initialPage.imageName = images[index]
+        return initialPage
+    }
+    
+    
+}
+
+
+extension ViewController: UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        let imageViewController = viewController as! ImageViewController
+        if imageViewController.pageIndex == 0 {
+            return nil
+        }
+        return getImageViewController(for: imageViewController.pageIndex! - 1)
+        
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        let imageViewController = viewController as! ImageViewController
+        if imageViewController.pageIndex! + 1 == images.count {
+            return nil
+        }
+        return getImageViewController(for: imageViewController.pageIndex! + 1)
+    }
+}
+
+extension ViewController: UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        if let imageViewController = pendingViewControllers.last as? ImageViewController {
+            currentPageIndex = imageViewController.pageIndex!
+        }
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if completed {
+            pageController.currentPage = currentPageIndex
+        }
+    }
+}
+
+
+
+```
