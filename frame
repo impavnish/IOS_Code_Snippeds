@@ -1,0 +1,52 @@
+ private var visibleFrame: CGRect {
+        let window = AppDelegate.current!.window
+        var visibleFrame = window?.bounds
+        visibleFrame?.origin.y = contentStackView.bounds.origin.y
+        return visibleFrame!
+    }
+    
+    private var hiddenFrame: CGRect {
+        let window = AppDelegate.current?.window
+        var hiddenFrame = window?.bounds
+        hiddenFrame?.origin.y = (window?.bounds.height)!
+        return hiddenFrame!
+    }
+    
+
+    class func create(date: Date = Date()) -> DatePicker {
+        let datePickerView = Bundle.main.loadNibNamed(DatePicker.name, owner: nil, options: nil)!.first as! DatePicker
+        datePickerView.frame = (AppDelegate.current?.window?.bounds)!
+        datePickerView.datePicker.date = date
+        return datePickerView
+    }
+    
+    func show() {
+        dateView.frame = hiddenFrame
+        AppDelegate.current?.window?.addSubview(self)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.contentStackView.frame = self.visibleFrame
+        }
+    }
+    
+    func hide() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.contentStackView.frame = self.hiddenFrame
+        }) { (isCompleted) in
+            if isCompleted {
+                self.removeFromSuperview()
+            }
+        }
+    }
+    
+    @IBAction func datePickerAction(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "E, MMM d YYYY"
+        let date = dateFormatter.string(from: datePicker.date)
+        delegate?.datePickerValueChange(value: date)
+    }
+    
+    @IBAction func buttonAction(_ sender: UIButton) {
+        hide()
+    }
